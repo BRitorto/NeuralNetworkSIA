@@ -1,4 +1,4 @@
-1;
+
 function ret = tensor_product(v, w)
   ret = [];
   for k = [1:numel(v)]
