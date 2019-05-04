@@ -1,5 +1,6 @@
 function info = load_file(terrain)
-    data = load('-ascii', terrain);
+    data = dlmread(terrain,'',1,0);
+    
     length = length(data / 3);
     x = data(1:length);
     y = data(length+1: length*2);
@@ -15,5 +16,5 @@ function info = load_file(terrain)
         info{k}{1} = [x(k) ; y(k)];
         info{k}{2} = z(k);
     end
-    # info # --> Uncomment if running terrain-test.m
+    info # --> Uncomment if running terrain-test.m
 endfunction
