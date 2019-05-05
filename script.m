@@ -4,4 +4,4 @@ addpath('./activation_derivatives')
 addpath('./utility_functions')
 addpath('./terrains')
 
-network_setup('./terrains/terrain05.data', 4, 200);
+network_setup('./terrains/terrain05.data', 5, 20)
