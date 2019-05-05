@@ -1,6 +1,3 @@
-1;
-addpath('./activation_derivatives')
-addpath('./utility_functions')
 function answer = learn(W, patterns, g, eta, cant_epochs, is_batch, is_random_approach, momentum, adaptative_eta, record_error)
   cant_layers = numel(W);
   cant_patterns = numel(patterns);
@@ -14,7 +11,7 @@ function answer = learn(W, patterns, g, eta, cant_epochs, is_batch, is_random_ap
   % learning has been successful
   consecutive_success = 0;
   % error_array(i) will hold the global error at the end of epoch i
-  error_array = zeros(cant_cant_epochs, 1);
+  error_array = zeros(cant_epochs, 1);
   
   for i = [1:cant_layers]
     last_delta_W{i} = zeros(rows(W{i}), columns(W{i}));
@@ -23,7 +20,7 @@ function answer = learn(W, patterns, g, eta, cant_epochs, is_batch, is_random_ap
   for k = [1:cant_epochs] 
     % Permute the patterns array uniformly if requested
     if (is_random_approach)
-      for i = [n:-1:2]
+      for i = [cant_patterns:-1:2]
         j = floor((unifrnd(1, n+1)-1)*0.99999+1);
         temp = patterns{i};
         patterns{i} = patterns{j};
@@ -39,7 +36,7 @@ function answer = learn(W, patterns, g, eta, cant_epochs, is_batch, is_random_ap
     endif
 
     % Run each pattern once
-    for p = [1:n]
+    for p = [1:cant_patterns]
       delta_W = run_and_correct(W, patterns{p}{1}, g, patterns{p}{2}, eta);
       if (is_batch)
         for i = [1:cant_layers]
@@ -96,6 +93,4 @@ function answer = learn(W, patterns, g, eta, cant_epochs, is_batch, is_random_ap
   else
     answer{2} = [];
   endif
-end function
-
-learn(W, patterns, g, eta, epochs, momentum = 0, aep = [], with_error = false)
+endfunction

@@ -16,5 +16,5 @@ function info = load_file(terrain)
         info{k}{1} = [x(k) ; y(k)];
         info{k}{2} = z(k);
     end
-    info # --> Uncomment if running terrain-test.m
+    #info # --> Uncomment if running terrain-test.m
 endfunction
