@@ -1,5 +1,3 @@
-# Script file?? Maybe this should be a function file
-
 function out = network_setup(terrain_file, epochs, n_samples)
     W = generate_weights_heEtAl([2 10 1]);
     full_patterns = load_file(terrain_file);
