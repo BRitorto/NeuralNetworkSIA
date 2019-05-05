@@ -1,13 +1,15 @@
 1;
-function ans = learn(W, patterns, g, eta, cant_epochs, is_batch, is_random_approach, momentum, adaptative_eta, record_error)
+addpath('./activation_derivatives')
+addpath('./utility_functions')
+function answer = learn(W, patterns, g, eta, cant_epochs, is_batch, is_random_approach, momentum, adaptative_eta, record_error)
   cant_layers = numel(W);
   cant_patterns = numel(patterns);
   
-  batch_dw = cell(cant_layers, 1);
-  % last_dw will hold the weight updates for the previous update (to implement momentum)
-  last_dw = cell(cant_layers,1);
-  % last_err will hold the error of the last epoch (to implement adaptative eta)
-  last_err = Inf;
+  batch_delta_W = cell(cant_layers, 1);
+  % last_delta_W will hold the weight updates for the previous update (to implement momentum)
+  last_delta_W = cell(cant_layers,1);
+  % last_error will hold the error of the last epoch (to implement adaptative eta)
+  last_error = Inf;
   % consecutive_success will hold the the consecutive number of cant_epochs during which the
   % learning has been successful
   consecutive_success = 0;
@@ -15,7 +17,7 @@ function ans = learn(W, patterns, g, eta, cant_epochs, is_batch, is_random_appro
   error_array = zeros(cant_cant_epochs, 1);
   
   for i = [1:cant_layers]
-    last_dw{i} = zeros(rows(W{i}), columns(W{i}));
+    last_delta_W{i} = zeros(rows(W{i}), columns(W{i}));
   endfor
   
   for k = [1:cant_epochs] 
@@ -29,49 +31,49 @@ function ans = learn(W, patterns, g, eta, cant_epochs, is_batch, is_random_appro
       endfor
     endif
 
-    % Initialize batch_dw, which will accumulate the weight changes for one whole epoch
+    % Initialize batch_delta_W, which will accumulate the weight changes for one whole epoch
     if (is_batch)
       for i = [1:cant_layers]
-        batch_dw{i} = zeros(rows(W{i}), columns(W{i}));
+        batch_delta_W{i} = zeros(rows(W{i}), columns(W{i}));
       endfor
     endif
 
     % Run each pattern once
     for p = [1:n]
-      dw = run_and_correct(W, patterns{p}{1}, g, patterns{p}{2}, eta);
+      delta_W = run_and_correct(W, patterns{p}{1}, g, patterns{p}{2}, eta);
       if (is_batch)
         for i = [1:cant_layers]
-          batch_dw{i} += dw{i};
+          batch_delta_W{i} += delta_W{i};
         endfor
       else % is_incremental
         for i = [1:cant_layers]
-          W{i} += dw{i} + momentum*last_dw{i};
+          W{i} += delta_W{i} + momentum*last_delta_W{i};
         endfor
-        last_dw = dw;
+        last_delta_W = delta_W;
       endif
     endfor
 
     % batch update
     if (is_batch)
       for j = [1:cant_layers]
-        W{j} += batch_dw{j} + momentum*last_dw{j};
+        W{j} += batch_delta_W{j} + momentum*last_delta_W{j};
       endfor
-      last_dw = batch_dw;
+      last_delta_W = batch_delta_W;
     endif
 
     % calculate error
-    err = 0;
+    error = 0;
     if (record_error)
-      err = calculate_error(W, patterns, g);
-      error_array(k) = err;
+      error = calculate_error(W, patterns, g);
+      error_array(k) = error;
     endif
 
     % adaptative eta
     if (adaptative_eta)
       if (record_error)
-        err = calculate_error(W, patterns, g);
+        error = calculate_error(W, patterns, g);
       endif
-      if (err < last_err)
+      if (error < last_error)
         consecutive_success++;
         if (consecutive_success == adaptative_eta(3))
           eta += adaptative_eta(1);
@@ -79,23 +81,21 @@ function ans = learn(W, patterns, g, eta, cant_epochs, is_batch, is_random_appro
         endif
       else
         consecutive_success = 0;
-        if (err > last_err)
+        if (error > last_error)
           eta -= adaptative_eta(2)*eta;
         endif
       endif
-      last_err = err;
+      last_error = error;
     endif
-
   endfor
   
-  ansWE = cell(2,1);
-  ansWE{1} = W;
+  answer = cell(2,1);
+  answer{1} = W;
   if (record_error)
-    ansWE{2} = error_array;
+    answer{2} = error_array;
   else
-    ansWE{2} = [];
+    answer{2} = [];
   endif
 end function
-
 
 learn(W, patterns, g, eta, epochs, momentum = 0, aep = [], with_error = false)
