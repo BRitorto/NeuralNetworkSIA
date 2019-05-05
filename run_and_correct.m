@@ -33,10 +33,10 @@ function delta_W = run_and_correct(W, E, g, S, eta)
   
   % delta is a cell array.
   delta = cell(cant_layers, 1);
-  delta_W = backpropagation(delta, W, S, V, derivatives, cant_layers);
+  delta_W = backpropagation(delta, W, S, V, derivatives, cant_layers, eta);
 endfunction
 
-function delta_W = backpropagation(delta, W, S, V, derivatives, cant_layers)
+function delta_W = backpropagation(delta, W, S, V, derivatives, cant_layers, eta)
   delta{cant_layers} = tensor_product(S - V{cant_layers+1}, derivatives{cant_layers+1});
   for k = [cant_layers-1:-1:1]
     delta{k} = tensor_product((delta{k+1}*W{k+1})(2:end), derivatives{k+1});
@@ -53,5 +53,5 @@ function derivatives = apply_derivative(derivatives, V, g, cant_layers)
   for k = [2:cant_layers]
     derivatives{k} = arrayfun(g{k-1}{2}, V{k}(2:end));
   endfor
-  derivatives{cant_layers+1} = arrayfun(g{M}{2}, V{cant_layers+1});
+  derivatives{cant_layers+1} = arrayfun(g{cant_layers}{2}, V{cant_layers+1});
 endfunction

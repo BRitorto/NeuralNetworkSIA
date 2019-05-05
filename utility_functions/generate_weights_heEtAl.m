@@ -4,12 +4,12 @@
 # network(m) is the number of neurons in the layer m -1
 # https://towardsdatascience.com/random-initialization-for-neural-networks-a-thing-of-the-past-bfcdd806bf9e
 function W = generate_weights_heEtAl(network)
-    M = numel(network) - 1;
-    W = cell(M, 1);
+  cant_layers = numel(network) - 1;
+  W = cell(cant_layers, 1);
 
-    for m = [1:M]
-        high = 2/sqrt(network(m));
-        low = high/4;   
-        W(m) = rand(network(m+1), (network(m)+ 1)*(high-low)) + low;
-    endfor
+  for m = [1:cant_layers]
+    high = 2/sqrt(network(m));
+    low = high/4;   
+    W(m) = rand(network(m+1), (network(m)+ 1))*(high-low) + low;
+  endfor
 endfunction
