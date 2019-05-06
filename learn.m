@@ -21,7 +21,7 @@ function answer = learn(W, patterns, g, eta, cant_epochs, is_batch, is_random_ap
     % Permute the patterns array uniformly if requested
     if (is_random_approach)
       for i = [cant_patterns:-1:2]
-        j = floor((unifrnd(1, n+1)-1)*0.99999+1);
+        j = floor((unifrnd(1, cant_patterns+1)-1)*0.99999+1);
         temp = patterns{i};
         patterns{i} = patterns{j};
         patterns{j} = temp;
@@ -73,17 +73,20 @@ function answer = learn(W, patterns, g, eta, cant_epochs, is_batch, is_random_ap
       if (error < last_error)
         consecutive_success++;
         if (consecutive_success == adaptative_eta(3))
-          eta += adaptative_eta(1);
+          eta = eta*adaptative_eta(1);
           consecutive_success = 0;
+          momentum = 0.9;
         endif
       else
         consecutive_success = 0;
         if (error > last_error)
-          eta -= adaptative_eta(2)*eta;
+          eta = eta*adaptative_eta(2);
+          momentum = 0;
         endif
       endif
       last_error = error;
     endif
+      error
   endfor
   
   answer = cell(2,1);

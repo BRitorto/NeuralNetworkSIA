@@ -37,15 +37,15 @@ function delta_W = run_and_correct(W, E, g, S, eta)
 endfunction
 
 function delta_W = backpropagation(delta, W, S, V, derivatives, cant_layers, eta)
-  delta{cant_layers} = tensor_product(S - V{cant_layers+1}, derivatives{cant_layers+1});
+  delta{cant_layers} = S - V{cant_layers+1};
   for k = [cant_layers-1:-1:1]
-    delta{k} = tensor_product((delta{k+1}*W{k+1})(2:end), derivatives{k+1});
+    delta{k} = (((W{k+1}')*delta{k+1})(2:end).*derivatives{k+1});
   endfor
   % delta_W is a cell array of matrices; delta_W{m} contains the weight update matrix for 
   % layer m
   delta_W = cell(cant_layers, 1);
   for k = [1:cant_layers]
-    delta_W{k} = eta*(V{k}*delta{k})';
+    delta_W{k} = eta*(delta{k}*V{k}');
   endfor
 endfunction
 
