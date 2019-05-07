@@ -28,5 +28,5 @@ function error = calculate_error(W, patterns, g)
       error += (patterns{p}{2}(o) - res(o))^2;
     endfor
   endfor
-  error /= 2;
+  error /= (2*P);
 endfunction
