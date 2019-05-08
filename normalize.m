@@ -1,5 +1,4 @@
 function out= normalize(patterns)
-
     max_value = getMax(patterns)
     min_value = getMin(patterns)
     row_num = size(patterns, 2);
