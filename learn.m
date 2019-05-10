@@ -1,7 +1,9 @@
-function answer = learn(patterns, cant_epochs, is_batch, is_random_approach, momentum, adaptative_eta, record_error)
+function answer = learn(patterns, is_batch, is_random_approach, momentum, adaptative_eta, record_error)
   global eta;
   global W;
   global g;
+  global max_epochs;
+  
   cant_layers = numel(W);
   cant_patterns = numel(patterns);
   
@@ -10,17 +12,17 @@ function answer = learn(patterns, cant_epochs, is_batch, is_random_approach, mom
   last_delta_W = cell(cant_layers,1);
   % last_error will hold the error of the last epoch (to implement adaptative eta)
   last_error = Inf;
-  % consecutive_success will hold the the consecutive number of cant_epochs during which the
+  % consecutive_success will hold the the consecutive number of max_epochs during which the
   % learning has been successful
   consecutive_success = 0;
   % error_array(i) will hold the global error at the end of epoch i
-  error_array = zeros(cant_epochs, 1);
+  error_array = zeros(max_epochs, 1);
   
   for i = [1:cant_layers]
     last_delta_W{i} = zeros(rows(W{i}), columns(W{i}));
   endfor
   
-  for k = [1:cant_epochs] 
+  for k = [1:max_epochs] 
     % Permute the patterns array uniformly if requested
     if (is_random_approach)
       for i = [cant_patterns:-1:2]

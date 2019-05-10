@@ -4,13 +4,8 @@ addpath('./activation_functions')
 addpath('./utility_functions')
 addpath('./terrains')
 
-terrain = './terrains/terrain05.data';
-max_epochs = 100;
-sample_number = 300;
-global arq = [2 10 5 1];
-global eta = 0.03;
-global W = generate_weights_random(arq);
-global g = {{@tanh, @dtanh}, {@tanh, @dtanh}, {@(x) x, @(x) 1}};
+source('network_parameters.bin');
 
-network_setup(terrain, max_epochs, sample_number);
 
+%save('varis.mat', 'g', 'arq', 'eta', 'sample_number', 'max_epochs');
+network_setup();
