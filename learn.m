@@ -1,9 +1,10 @@
-function answer = learn(patterns, is_batch, is_random_approach, momentum, adaptative_eta, record_error)
+function answer = learn(patterns, is_batch, is_random_approach, adaptative_eta, record_error)
   global eta;
   global W;
   global g;
   global max_epochs;
-  
+  global momentum;
+
   cant_layers = numel(W);
   cant_patterns = numel(patterns);
   
